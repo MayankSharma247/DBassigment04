@@ -1,0 +1,17 @@
+---
+- name: Deploy MySQL and apply migrations
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Start MySQL container
+      shell: docker-compose up -d mysql
+
+    - name: Wait for MySQL to be ready
+      wait_for:
+        host: localhost
+        port: 3306
+        delay: 10
+        timeout: 30
+
+    - name: Run Flyway migration
+      shell: docker-compose run --rm flyway migrate

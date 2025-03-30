@@ -1,0 +1,11 @@
+---
+- name: Backup and shut down MySQL
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Create migration from latest changes
+      shell: docker exec mysql_db mysqldump -u root -proot subscribers_db > migrations/latest_changes.sql
+
+    - name: Stop MySQL container
+      shell: docker-compose down
+

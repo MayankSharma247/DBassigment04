@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: subscribers_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  flyway:
+    image: flyway/flyway:latest
+    container_name: flyway_migration
+    volumes:
+      - ./migrations:/flyway/sql
+    environment:
+      - FLYWAY_URL=jdbc:mysql://mysql:3306/subscribers_db
+      - FLYWAY_USER=root
+      - FLYWAY_PASSWORD=root
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
+
